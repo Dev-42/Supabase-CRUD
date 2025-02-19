@@ -1,25 +1,24 @@
-"use strict";
+const { faker } = require("@faker-js/faker");
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
+  up: async (queryInterface, Sequelize) => {
+    const users = [];
+
+    for (let i = 0; i < 10; i++) {
+      users.push({
+        username: faker.internet.userName(),
+        name: faker.person.fullName(),
+        repoCount: faker.number.int({ min: 1, max: 100 }),
+        location: faker.location.city(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+
+    await queryInterface.bulkInsert("users", users, {});
   },
 
-  async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete("users", null, {});
   },
 };
